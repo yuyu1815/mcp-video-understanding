@@ -34,6 +34,11 @@ npm install
 npm start
 ```
 
+### MCPツール
+- `checkEnvironment`: `.env` から読み込んだ `GOOGLE_API_KEY` と利用モデルを確認できます。
+- `analyzeLocalVideo`: ローカル動画を要約します。
+- `analyzeRemoteVideo`: 公開URLの動画を分析します。
+
 ## 開発
 ```bash
 npm run dev

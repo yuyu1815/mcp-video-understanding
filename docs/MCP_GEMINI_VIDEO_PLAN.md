@@ -14,7 +14,7 @@
 ## 3. Dependencies & Environment
 - Runtime: Node.js 18+ (ES2022 features).
 - Packages: `@modelcontextprotocol/sdk`, `@google/genai`, development-time `typescript`, `@types/node`.
-- Secrets: `GOOGLE_API_KEY` exported or provided through `.env` (optional `dotenv` hook).
+- Secrets: `.env` の `GOOGLE_API_KEY` を `dotenv` で読み込む。
 - Build outputs: `./build/index.js` (ESM) with executable bit set for CLI usage.
 
 ## 4. High-Level Architecture
@@ -33,7 +33,7 @@
 - `src/geminiClient.ts` – Wraps `GoogleGenAI` operations for inline data and URL inputs.
 - `src/types.ts` – Defines TypeScript interfaces for tool inputs/outputs & validation helpers.
 - `src/utils/file.ts` – Local file existence + size checks + Base64 conversion.
-- `src/config.ts` (optional) – Reads env vars, enforces required configuration.
+- `src/config.ts` – `dotenv` で読み込まれた環境変数を検証する。
 
 ## 5. MCP Tool Design
 | Tool Name | Purpose | Input Schema (JSON Schema excerpt) | Output |
@@ -62,7 +62,7 @@
 - For local files >20 MB, fail fast with guidance to use future Files API integration.
 
 ## 8. Configuration & Secrets
-- Runtime expects `GOOGLE_API_KEY` in environment; optional `.env` loading via `dotenv` (Phase 2).
+- Runtime expects `.env` に定義された `GOOGLE_API_KEY` が読み込まれていること。
 - Allow optional `MODEL_NAME` env override (default `gemini-2.5-flash`).
 - Document necessary IAM/project setup for Gemini API access (Google AI Studio).
 

@@ -27,7 +27,7 @@ npm install
 ```
 
 3. 環境変数を設定
-`.env.example`を参考に`.env`ファイルを作成
+`.env.example` を参考に `.env` ファイルを作成し、`GOOGLE_API_KEY` を設定してください。`dotenv` により起動時に自動で読み込まれます。
 
 ## 使用方法
 ```bash

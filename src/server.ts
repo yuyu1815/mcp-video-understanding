@@ -67,9 +67,9 @@ export function createServer(config: AppConfig): Server {
           throw new Error(`Unknown tool requested: ${request.params.name}`);
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.error(`Tool execution failed (${toolName}):`, message);
-      throw error;
+      const normalized = normalizeError(error);
+      logToolError(toolName, args, normalized);
+      throw normalized;
     }
   });
 
@@ -89,4 +89,30 @@ function toToolResponse(text: string, toolName: ToolName) {
       }
     ]
   };
+}
+
+function logToolError(toolName: ToolName, args: unknown, error: Error): void {
+  const serializedArgs = safeSerialize(args);
+  console.error(`Tool execution failed (${toolName})`, {
+    args: serializedArgs,
+    message: error.message
+  });
+  if (error.stack) {
+    console.error(error.stack);
+  }
+}
+
+function safeSerialize(value: unknown): unknown {
+  try {
+    return JSON.parse(JSON.stringify(value));
+  } catch {
+    return "[unserializable arguments]";
+  }
+}
+
+function normalizeError(error: unknown): Error {
+  if (error instanceof Error) {
+    return error;
+  }
+  return new Error(String(error));
 }

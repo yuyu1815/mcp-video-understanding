@@ -1,0 +1,39 @@
+{
+  "name": "mcp-video-understanding",
+  "version": "1.0.0",
+  "description": "MCP server exposing Gemini video understanding tools",
+  "type": "module",
+  "bin": {
+    "gemini-video-mcp": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc && chmod 755 build/index.js",
+    "test": "npm run build"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shin902/mcp-video-understanding.git"
+  },
+  "keywords": [
+    "mcp",
+    "gemini",
+    "video"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shin902/mcp-video-understanding/issues"
+  },
+  "homepage": "https://github.com/shin902/mcp-video-understanding#readme",
+  "dependencies": {
+    "@google/genai": "^1.21.0",
+    "@modelcontextprotocol/sdk": "^1.18.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.1",
+    "typescript": "^5.9.3"
+  }
+}

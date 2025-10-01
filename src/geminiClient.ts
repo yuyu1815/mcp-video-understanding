@@ -1,0 +1,123 @@
+import { GoogleGenAI } from "@google/genai";
+import type { AppConfig } from "./config.js";
+import {
+  AnalyzeLocalVideoInput,
+  AnalyzeRemoteVideoInput,
+  resolvePrompt
+} from "./types.js";
+import { readFileAsBase64 } from "./utils/file.js";
+
+export class GeminiVideoClient {
+  private readonly ai: GoogleGenAI;
+  private readonly defaultModel: string;
+  private readonly maxInlineFileBytes: number;
+
+  constructor(config: AppConfig) {
+    this.ai = new GoogleGenAI({ apiKey: config.apiKey });
+    this.defaultModel = config.model;
+    this.maxInlineFileBytes = config.maxInlineFileBytes;
+  }
+
+  async analyzeLocalVideo(input: AnalyzeLocalVideoInput): Promise<string> {
+    const { base64Data } = await readFileAsBase64(
+      input.filePath,
+      this.maxInlineFileBytes
+    );
+
+    const prompt = resolvePrompt(input.prompt);
+    const model = pickModel(input.model, this.defaultModel);
+    const mimeType = input.mimeType ?? "video/mp4";
+
+    const response = await this.ai.models.generateContent({
+      model,
+      contents: [
+        {
+          inlineData: {
+            mimeType,
+            data: base64Data
+          }
+        },
+        {
+          text: prompt
+        }
+      ]
+    });
+
+    return extractText(response);
+  }
+
+  async analyzeRemoteVideo(input: AnalyzeRemoteVideoInput): Promise<string> {
+    const prompt = resolvePrompt(input.prompt);
+    const model = pickModel(input.model, this.defaultModel);
+
+    const response = await this.ai.models.generateContent({
+      model,
+      contents: [
+        { text: prompt },
+        {
+          fileData: {
+            fileUri: input.videoUrl
+          }
+        }
+      ]
+    });
+
+    return extractText(response);
+  }
+}
+
+function pickModel(candidate: string | undefined, fallback: string): string {
+  if (candidate && candidate.trim().length > 0) {
+    return candidate.trim();
+  }
+  return fallback;
+}
+
+type GenerateContentReturn = Awaited<
+  ReturnType<GoogleGenAI["models"]["generateContent"]>
+>;
+
+function extractText(result: GenerateContentReturn): string {
+  if (!result) {
+    return "";
+  }
+
+  const directText = (result as { text?: unknown }).text;
+  if (typeof directText === "string" && directText.length > 0) {
+    return directText;
+  }
+  if (typeof directText === "function") {
+    const maybeText = (directText as () => string)();
+    if (maybeText && maybeText.length > 0) {
+      return maybeText;
+    }
+  }
+
+  const nested = (result as { response?: { text?: unknown; candidates?: unknown } }).response;
+  if (nested) {
+    if (typeof nested.text === "string" && nested.text.length > 0) {
+      return nested.text;
+    }
+    if (typeof nested.text === "function") {
+      const maybeText = (nested.text as () => string)();
+      if (maybeText && maybeText.length > 0) {
+        return maybeText;
+      }
+    }
+
+    const candidates = (nested as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> }).candidates;
+    if (Array.isArray(candidates) && candidates.length > 0) {
+      const parts = candidates[0]?.content?.parts;
+      if (Array.isArray(parts) && parts.length > 0) {
+        const textParts = parts
+          .map((part) => (typeof part?.text === "string" ? part.text : ""))
+          .filter((part) => part.length > 0);
+        if (textParts.length > 0) {
+          return textParts.join("\n");
+        }
+      }
+    }
+  }
+
+  return "";
+}

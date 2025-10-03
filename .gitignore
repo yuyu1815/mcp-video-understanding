@@ -48,3 +48,6 @@ coverage/
 # Tool configuration directories
 .codex/
 .serena/
+
+# Data files
+data/

@@ -1,39 +1,52 @@
-# MCP Video Understanding Project
+# 🎥 MCP Video Understanding
 
-## プロジェクトの概要
-このプロジェクトは、Model Context Protocol (MCP) サーバーとして動作し、Gemini APIを使用したビデオ理解機能を提供します。
+> Gemini APIを活用したビデオ理解機能を提供するModel Context Protocol (MCP) サーバー
+
+## 概要
+
+このプロジェクトは、Gemini APIのマルチモーダル機能を活用し、動画の理解・分析を行うMCPサーバーです。ローカルまたはリモートの動画を分析し、内容を詳細に要約できます。
 
 ## 主な機能
-- ビデオからの意味理解
-- マルチモーダル分析
-- 高度な機械学習モデルの統合
 
-## セットアップ方法
+✨ **ビデオからの意味理解** - 音声と映像を統合的に分析
+🎯 **マルチモーダル分析** - Geminiの高度なAI機能を活用
+🔧 **柔軟な設定** - カスタムプロンプトとモデル選択が可能
 
-### 前提条件
-- Node.js (v18以上)
+## 前提条件
+
+- Node.js v18以上
 - npm
+- Google Cloud の Gemini API キー
 
-### インストール手順
-1. リポジトリをクローン
+## セットアップ
+
+### インストール
+
 ```bash
+# リポジトリをクローン
 git clone https://github.com/shin902/mcp-video-understanding.git
 cd mcp-video-understanding
-```
 
-2. 依存関係をインストール
-```bash
+# 依存関係をインストール
 npm install
+
+# ビルド
+npm run build
 ```
 
-3. 環境変数を設定
-`.env.example` を参考に `.env` ファイルを作成し、`GOOGLE_API_KEY` を設定してください。`dotenv` により起動時に自動で読み込まれます。
+### API キーの設定
 
-    もしくは、`~/.zshrc` に `export GOOGLE_API_KEY="your_api_key"` を追加してシェルの環境変数として定義することもできます。`.env` に値がなくても、サーバーは `~/.zshrc` を読み取ってキーを解決します。
+`~/.zshrc` または `~/.bashrc` にAPIキーを設定してください：
 
-### MCP サーバーの設定
+```bash
+export GOOGLE_API_KEY="your_api_key_here"
+```
 
-Claude Desktop などの MCP クライアントで使用する場合、設定ファイルに以下を追加してください：
+サーバーは自動的に `~/.zshrc` からキーを読み取ります。
+
+### MCP クライアントの設定
+
+Claude Desktop などのMCPクライアントで使用する場合、設定ファイルに以下を追加：
 
 ```json
 {
@@ -49,13 +62,8 @@ Claude Desktop などの MCP クライアントで使用する場合、設定フ
 }
 ```
 
-**API キーを設定ファイルに直接書きたくない場合**は、`~/.zshrc` (または `~/.bashrc`) に以下を追加してください：
-
-```bash
-export GOOGLE_API_KEY="your_api_key_here"
-```
-
-その場合、MCP サーバーの設定は `env` を空にできます：
+**セキュリティ重視の設定**
+APIキーを設定ファイルに直接書きたくない場合は、`env` を空にしてシェル環境変数を使用：
 
 ```json
 {
@@ -69,32 +77,32 @@ export GOOGLE_API_KEY="your_api_key_here"
 }
 ```
 
-**注意**: 環境によっては `npx` のフルパスが必要な場合があります。ターミナルで `which npx` を実行してパスを確認してください。例：
-- `/usr/local/bin/npx` (一般的なインストール)
-- `/opt/homebrew/bin/npx` (Apple Silicon Mac の Homebrew)
-- `/Users/your-username/.local/share/mise/shims/npx` (mise 使用時)
-
-## ビルド
-```bash
-npm run build
-```
-
-ビルドされたファイルは `build/` ディレクトリに出力されます。
+> **注意**: 環境によっては `npx` のフルパスが必要です。`which npx` で確認してください。
+> - 一般的: `/usr/local/bin/npx`
+> - Apple Silicon (Homebrew): `/opt/homebrew/bin/npx`
+> - mise使用時: `/Users/your-username/.local/share/mise/shims/npx`
 
 ## 使用方法
 
-### スタンドアロンで実行
+### スタンドアロン実行
+
 ```bash
 npm start
 ```
 
-### MCPツール
+### 利用可能なツール
 
-#### `checkEnvironment`
-`.env` から読み込んだ `GOOGLE_API_KEY` と利用モデルを確認できます。
+#### 🔍 `checkEnvironment`
 
-#### `analyzeLocalVideo`
-ローカル動画を要約します（最大20MBまで対応）。
+環境変数と利用モデルを確認します。
+
+```
+GOOGLE_API_KEY の読み込み状態と使用中のモデルを表示
+```
+
+#### 📹 `analyzeLocalVideo`
+
+ローカルの動画ファイルを分析します（最大20MB）。
 
 **デフォルトプロンプト**:
 ```
@@ -102,42 +110,53 @@ npm start
 その次に小さなセクションごとに更に詳細な要約を行ってください。
 ```
 
-このプロンプトは網羅的な要約に最適です。カスタムプロンプトを指定することも可能です。
+カスタムプロンプトを指定することも可能です。
 
-**対応する動画**:
-全ての動画に対応してます。
-- 音声付きの解説動画など（通常の動画）
-- 音声なし動画（映像のみ）
-- Music Video（映像がメインの動画）
+#### 🌐 `analyzeRemoteVideo`
 
-Gemini のマルチモーダル動画理解により、様々な形式の動画を適切に分析できます。
-
-#### `analyzeRemoteVideo`
 公開URLの動画を分析します。使用方法は `analyzeLocalVideo` と同様です。
 
 **YouTube動画の制限**:
-以下のYouTube動画はURLを指定しても取得できません：
-- 非公開動画
-- 限定公開動画
-- 配信のアーカイブ
+- ❌ 非公開動画
+- ❌ 限定公開動画
+- ❌ 配信のアーカイブ
+- ✅ 完全に公開されている動画のみ対応
 
-完全に公開されている動画のみ分析可能です。
+### 対応する動画形式
+
+Geminiのマルチモーダル動画理解により、以下の形式に対応：
+
+- 🎤 **音声付き解説動画** - 講義、チュートリアルなど
+- 🎬 **音声なし動画** - 映像のみのコンテンツ
+- 🎵 **Music Video** - 映像がメインの動画
 
 ### 使用モデル
-デフォルトは `gemini-2.5-flash` を使用します。`gemini-2.5-pro` や `gemini-2.5-flash-lite` も選択可能です。
+
+| モデル | 特徴 |
+|--------|------|
+| `gemini-2.5-flash` (デフォルト) | 高速かつバランスの取れた性能 |
+| `gemini-2.5-pro` | より高度な分析が可能 |
+| `gemini-2.5-flash-lite` | 軽量で高速 |
 
 ## 開発
+
 ```bash
+# 開発モードで実行
 npm run dev
+
+# テスト実行
+npm test
+
+# ビルド
+npm run build
 ```
 
-## テスト
-```bash
-npm test
-```
+ビルドされたファイルは `build/` ディレクトリに出力されます。
 
 ## コントリビューション
-プルリクエストは歓迎します。大きな変更を行う前に、まずissueで議論してください。
+
+プルリクエストは歓迎します！大きな変更を行う前に、まずissueで議論してください。
 
 ## ライセンス
+
 MIT

@@ -29,6 +29,8 @@ npm install
 3. 環境変数を設定
 `.env.example` を参考に `.env` ファイルを作成し、`GOOGLE_API_KEY` を設定してください。`dotenv` により起動時に自動で読み込まれます。
 
+    もしくは、`~/.zshrc` に `export GOOGLE_API_KEY="your_api_key"` を追加してシェルの環境変数として定義することもできます。`.env` に値がなくても、サーバーは `~/.zshrc` を読み取ってキーを解決します。
+
 ## 使用方法
 ```bash
 npm start

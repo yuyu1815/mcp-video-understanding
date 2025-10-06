@@ -14,7 +14,7 @@
 ## 3. Dependencies & Environment
 - Runtime: Node.js 18+ (ES2022 features).
 - Packages: `@modelcontextprotocol/sdk`, `@google/genai`, development-time `typescript`, `@types/node`.
-- Secrets: `.env` の `GOOGLE_API_KEY` を `dotenv` で読み込む。
+- Secrets: `.env` の `GOOGLE_API_KEY` を `dotenv` で読み込む。`.env` に未設定の場合は `~/.zshrc` の `export GOOGLE_API_KEY=...` をフォールバックとして読む。
 - Build outputs: `./build/index.js` (ESM) with executable bit set for CLI usage.
 
 ## 4. High-Level Architecture
@@ -63,7 +63,7 @@
 - For local files >20 MB, fail fast with guidance to use future Files API integration.
 
 ## 8. Configuration & Secrets
-- Runtime expects `.env` に定義された `GOOGLE_API_KEY` が読み込まれていること。
+- Runtime expects `.env` または `~/.zshrc` に定義された `GOOGLE_API_KEY` が読み込まれていること。
 - Allow optional `MODEL_NAME` env override (default `gemini-2.5-flash`).
 - Document necessary IAM/project setup for Gemini API access (Google AI Studio).
 

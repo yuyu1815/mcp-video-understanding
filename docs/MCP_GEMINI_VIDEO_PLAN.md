@@ -40,7 +40,6 @@
 |-----------|---------|-------------------------------------|--------|
 | `analyzeLocalVideo` | Summarise or describe uploaded local MP4 | `{ type: "object", properties: { filePath: { type: "string" }, prompt: { type: "string", default: "この動画を3文で要約してください。" } }, required: ["filePath"] }` | Text block with Gemini response |
 | `analyzeRemoteVideo` | Process hosted video by URL (YouTube, etc.) | `{ type: "object", properties: { videoUrl: { type: "string", format: "uri" }, prompt: { type: "string", default: "この動画を3文で要約してください。" } }, required: ["videoUrl"] }` | Text block |
-| `checkEnvironment` | Return current configuration status (masked API key, active model). | `{ type: "object", properties: {}, additionalProperties: false }` | Text block |
 | `describeSegments` (optional Phase 2) | Request scene-by-scene descriptions | `{ type: "object", properties: { source: { type: "string" }, segments: { type: "array", items: { type: "object", properties: { start: { type: "number" }, end: { type: "number" } }, required: ["start","end"] } }, prompt: { type: "string" } }, required: ["source","segments"] }` | Text (JSON string) |
 
 ## 6. Request Handling Flow

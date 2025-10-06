@@ -3,10 +3,7 @@ export const DEFAULT_PROMPT =
 export const DEFAULT_MODEL_NAME = "gemini-2.5-flash";
 export const MAX_INLINE_FILE_BYTES = 20 * 1024 * 1024; // 20MB limit recommended for inline uploads
 
-export type ToolName =
-  | "analyzeLocalVideo"
-  | "analyzeRemoteVideo"
-  | "checkEnvironment";
+export type ToolName = "analyzeLocalVideo" | "analyzeRemoteVideo";
 
 export interface AnalyzeLocalVideoInput {
   filePath: string;
@@ -44,13 +41,6 @@ export const ANALYZE_LOCAL_VIDEO_INPUT_SCHEMA = {
     },
   },
   required: ["filePath"],
-  additionalProperties: false,
-} as const;
-
-export const CHECK_ENVIRONMENT_INPUT_SCHEMA = {
-  type: "object",
-  properties: {},
-  required: [],
   additionalProperties: false,
 } as const;
 
@@ -106,18 +96,6 @@ export function isAnalyzeLocalVideoInput(
     return false;
   }
   return true;
-}
-
-export function isCheckEnvironmentInput(
-  value: unknown,
-): value is Record<string, never> {
-  if (value === null || value === undefined) {
-    return true;
-  }
-  if (typeof value !== "object") {
-    return false;
-  }
-  return Object.keys(value as Record<string, unknown>).length === 0;
 }
 
 export function isAnalyzeRemoteVideoInput(

@@ -36,7 +36,9 @@ function resolveGoogleApiKey(): string {
     return fromZshrc;
   }
 
-  throw new Error("Environment variable GOOGLE_API_KEY must be set for the Gemini MCP server.");
+  throw new Error(
+    "GOOGLE_API_KEY が設定されていないため Gemini Video MCP サーバーに接続できません。環境変数 GOOGLE_API_KEY に Gemini API キーを設定してください。",
+  );
 }
 
 function readApiKeyFromZshrc(): string | null {

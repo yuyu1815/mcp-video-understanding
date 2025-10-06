@@ -1,6 +1,6 @@
 {
-  "name": "mcp-video-understanding",
-  "version": "1.0.0",
+  "name": "@shin902/mcp-video-understanding",
+  "version": "1.1.0",
   "description": "MCP server exposing Gemini video understanding tools",
   "type": "module",
   "bin": {

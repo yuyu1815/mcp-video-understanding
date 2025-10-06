@@ -6,7 +6,9 @@ export interface ResolvedFile {
   sizeInBytes: number;
 }
 
-export async function ensureFileReadable(filePath: string): Promise<ResolvedFile> {
+export async function ensureFileReadable(
+  filePath: string,
+): Promise<ResolvedFile> {
   const resolvedPath = path.resolve(filePath);
   let fileStat;
   try {
@@ -16,12 +18,14 @@ export async function ensureFileReadable(filePath: string): Promise<ResolvedFile
   }
 
   if (!fileStat.isFile()) {
-    throw new Error(`Expected a file but found something else at: ${resolvedPath}`);
+    throw new Error(
+      `Expected a file but found something else at: ${resolvedPath}`,
+    );
   }
 
   return {
     resolvedPath,
-    sizeInBytes: fileStat.size
+    sizeInBytes: fileStat.size,
   };
 }
 
@@ -29,11 +33,14 @@ export interface ReadBase64Result extends ResolvedFile {
   base64Data: string;
 }
 
-export async function readFileAsBase64(filePath: string, maxBytes: number): Promise<ReadBase64Result> {
+export async function readFileAsBase64(
+  filePath: string,
+  maxBytes: number,
+): Promise<ReadBase64Result> {
   const { resolvedPath, sizeInBytes } = await ensureFileReadable(filePath);
   if (sizeInBytes > maxBytes) {
     throw new Error(
-      `Local video file exceeds inline upload limit (${sizeInBytes} bytes > ${maxBytes} bytes). Use a smaller file or a remote URL.`
+      `Local video file exceeds inline upload limit (${sizeInBytes} bytes > ${maxBytes} bytes). Use a smaller file or a remote URL.`,
     );
   }
 
@@ -41,6 +48,6 @@ export async function readFileAsBase64(filePath: string, maxBytes: number): Prom
   return {
     resolvedPath,
     sizeInBytes,
-    base64Data: buffer.toString("base64")
+    base64Data: buffer.toString("base64"),
   };
 }

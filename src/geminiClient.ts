@@ -3,7 +3,7 @@ import type { AppConfig } from "./config.js";
 import {
   AnalyzeLocalVideoInput,
   AnalyzeRemoteVideoInput,
-  resolvePrompt
+  resolvePrompt,
 } from "./types.js";
 import { readFileAsBase64 } from "./utils/file.js";
 
@@ -21,7 +21,7 @@ export class GeminiVideoClient {
   async analyzeLocalVideo(input: AnalyzeLocalVideoInput): Promise<string> {
     const { base64Data } = await readFileAsBase64(
       input.filePath,
-      this.maxInlineFileBytes
+      this.maxInlineFileBytes,
     );
 
     const prompt = resolvePrompt(input.prompt);
@@ -34,13 +34,13 @@ export class GeminiVideoClient {
         {
           inlineData: {
             mimeType,
-            data: base64Data
-          }
+            data: base64Data,
+          },
         },
         {
-          text: prompt
-        }
-      ]
+          text: prompt,
+        },
+      ],
     });
 
     return extractText(response);
@@ -56,10 +56,10 @@ export class GeminiVideoClient {
         { text: prompt },
         {
           fileData: {
-            fileUri: input.videoUrl
-          }
-        }
-      ]
+            fileUri: input.videoUrl,
+          },
+        },
+      ],
     });
 
     return extractText(response);
@@ -93,7 +93,9 @@ function extractText(result: GenerateContentReturn): string {
     }
   }
 
-  const nested = (result as { response?: { text?: unknown; candidates?: unknown } }).response;
+  const nested = (
+    result as { response?: { text?: unknown; candidates?: unknown } }
+  ).response;
   if (nested) {
     if (typeof nested.text === "string" && nested.text.length > 0) {
       return nested.text;
@@ -105,7 +107,11 @@ function extractText(result: GenerateContentReturn): string {
       }
     }
 
-    const candidates = (nested as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> }).candidates;
+    const candidates = (
+      nested as {
+        candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+      }
+    ).candidates;
     if (Array.isArray(candidates) && candidates.length > 0) {
       const parts = candidates[0]?.content?.parts;
       if (Array.isArray(parts) && parts.length > 0) {

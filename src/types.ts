@@ -2,7 +2,10 @@ export const DEFAULT_PROMPT = "この動画を3文で要約してください。
 export const DEFAULT_MODEL_NAME = "gemini-2.5-flash";
 export const MAX_INLINE_FILE_BYTES = 20 * 1024 * 1024; // 20MB limit recommended for inline uploads
 
-export type ToolName = "analyzeLocalVideo" | "analyzeRemoteVideo" | "checkEnvironment";
+export type ToolName =
+  | "analyzeLocalVideo"
+  | "analyzeRemoteVideo"
+  | "checkEnvironment";
 
 export interface AnalyzeLocalVideoInput {
   filePath: string;
@@ -22,32 +25,32 @@ export const ANALYZE_LOCAL_VIDEO_INPUT_SCHEMA = {
   properties: {
     filePath: {
       type: "string",
-      description: "Absolute or relative path to a local video file (≤ 20MB)."
+      description: "Absolute or relative path to a local video file (≤ 20MB).",
     },
     prompt: {
       type: "string",
       description: "Optional custom instruction for Gemini video analysis.",
-      default: DEFAULT_PROMPT
+      default: DEFAULT_PROMPT,
     },
     mimeType: {
       type: "string",
       description: "MIME type for the provided file (defaults to video/mp4).",
-      default: "video/mp4"
+      default: "video/mp4",
     },
     model: {
       type: "string",
-      description: "Override Gemini model name (defaults to gemini-2.5-flash)."
-    }
+      description: "Override Gemini model name (defaults to gemini-2.5-flash).",
+    },
   },
   required: ["filePath"],
-  additionalProperties: false
+  additionalProperties: false,
 } as const;
 
 export const CHECK_ENVIRONMENT_INPUT_SCHEMA = {
   type: "object",
   properties: {},
   required: [],
-  additionalProperties: false
+  additionalProperties: false,
 } as const;
 
 export const ANALYZE_REMOTE_VIDEO_INPUT_SCHEMA = {
@@ -56,20 +59,20 @@ export const ANALYZE_REMOTE_VIDEO_INPUT_SCHEMA = {
     videoUrl: {
       type: "string",
       format: "uri",
-      description: "Remote video URL supported by Gemini (e.g., YouTube)."
+      description: "Remote video URL supported by Gemini (e.g., YouTube).",
     },
     prompt: {
       type: "string",
       description: "Optional custom instruction for Gemini video analysis.",
-      default: DEFAULT_PROMPT
+      default: DEFAULT_PROMPT,
     },
     model: {
       type: "string",
-      description: "Override Gemini model name (defaults to gemini-2.5-flash)."
-    }
+      description: "Override Gemini model name (defaults to gemini-2.5-flash).",
+    },
   },
   required: ["videoUrl"],
-  additionalProperties: false
+  additionalProperties: false,
 } as const;
 
 export function resolvePrompt(prompt?: string): string {
@@ -79,7 +82,9 @@ export function resolvePrompt(prompt?: string): string {
   return DEFAULT_PROMPT;
 }
 
-export function isAnalyzeLocalVideoInput(value: unknown): value is AnalyzeLocalVideoInput {
+export function isAnalyzeLocalVideoInput(
+  value: unknown,
+): value is AnalyzeLocalVideoInput {
   if (value === null || typeof value !== "object") {
     return false;
   }
@@ -90,7 +95,10 @@ export function isAnalyzeLocalVideoInput(value: unknown): value is AnalyzeLocalV
   if (candidate.prompt !== undefined && typeof candidate.prompt !== "string") {
     return false;
   }
-  if (candidate.mimeType !== undefined && typeof candidate.mimeType !== "string") {
+  if (
+    candidate.mimeType !== undefined &&
+    typeof candidate.mimeType !== "string"
+  ) {
     return false;
   }
   if (candidate.model !== undefined && typeof candidate.model !== "string") {
@@ -99,7 +107,9 @@ export function isAnalyzeLocalVideoInput(value: unknown): value is AnalyzeLocalV
   return true;
 }
 
-export function isCheckEnvironmentInput(value: unknown): value is Record<string, never> {
+export function isCheckEnvironmentInput(
+  value: unknown,
+): value is Record<string, never> {
   if (value === null || value === undefined) {
     return true;
   }
@@ -109,7 +119,9 @@ export function isCheckEnvironmentInput(value: unknown): value is Record<string,
   return Object.keys(value as Record<string, unknown>).length === 0;
 }
 
-export function isAnalyzeRemoteVideoInput(value: unknown): value is AnalyzeRemoteVideoInput {
+export function isAnalyzeRemoteVideoInput(
+  value: unknown,
+): value is AnalyzeRemoteVideoInput {
   if (value === null || typeof value !== "object") {
     return false;
   }

@@ -1,4 +1,5 @@
 import { readFile, stat } from "node:fs/promises";
+import type { Stats } from "node:fs";
 import path from "node:path";
 
 export interface ResolvedFile {
@@ -10,7 +11,7 @@ export async function ensureFileReadable(
   filePath: string,
 ): Promise<ResolvedFile> {
   const resolvedPath = path.resolve(filePath);
-  let fileStat;
+  let fileStat: Stats;
   try {
     fileStat = await stat(resolvedPath);
   } catch (error) {

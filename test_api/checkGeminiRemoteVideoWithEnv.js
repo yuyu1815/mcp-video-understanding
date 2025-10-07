@@ -6,7 +6,7 @@ loadEnv();
 
 import { GeminiVideoClient } from '../build/geminiClient.js';
 
-const apiKey = '';
+const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY || process.env.GEMINI_API || "";
 
 if (!apiKey) {
   console.error('GEMINI_API (or GEMINI_API_KEY/GOOGLE_API_KEY) is not set in environment/.env');

@@ -4,7 +4,7 @@
   "description": "MCP server exposing Gemini video understanding tools",
   "type": "module",
   "bin": {
-    "gemini-video-mcp": "./build/index.js"
+    "mcp-video-understanding": "build/index.js"
   },
   "scripts": {
     "build": "tsc && chmod 755 build/index.js",
